@@ -23,7 +23,10 @@ import co.aikar.commands.annotation.Subcommand;
 import me.limhax.tFFA.TFFA;
 import me.limhax.tFFA.event.FFAEvent;
 import me.limhax.tFFA.manager.ConfigManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 @CommandAlias("ffa|tffa")
 @CommandPermission("tffa.join")
@@ -33,7 +36,7 @@ public class JoinCommand extends BaseCommand {
   public void execute(Player sender) {
     ConfigManager config = TFFA.getInstance().getConfigManager();
     FFAEvent event = TFFA.getInstance().getEvent();
-
+    if (sender.getPlayer() == null) return;
     if (event.isStated()) {
       sender.sendMessage(config.getMessage("join-already-started"));
       return;
@@ -54,7 +57,17 @@ public class JoinCommand extends BaseCommand {
       return;
     }
 
-    event.addPlayer(sender.getPlayer());
+    List<String> joinCommands = TFFA.getInstance().getConfig().getStringList("settings.join-commands");
+    for (String command : joinCommands) {
+      String cmd = command.replace("%player%", sender.getPlayer().getName());
+      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+    }
+
+    Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
+      if (sender.getPlayer() != null) {
+        event.addPlayer(sender.getPlayer());
+      }
+    }, 20);
 
     sender.sendMessage(config.getMessage("joined-event"));
   }

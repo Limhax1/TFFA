@@ -45,6 +45,9 @@ public class FFAEvent {
   public void start() {
     running = true;
     this.stopping = false;
+    World world = WorldUtil.getWorld(TFFA.getInstance().getConfigManager().getSetting("world-name"));
+    final int original = TFFA.getInstance().getConfigManager().getInt("border-original-size");
+    world.getWorldBorder().setSize(original);
     ConfigManager config = TFFA.getInstance().getConfigManager();
     long delay = config.getInt("start-delay") * 1000L;
 
@@ -63,7 +66,6 @@ public class FFAEvent {
 
       TFFA.getInstance().getEffectManager().scheduleEffects();
       TFFA.getInstance().getBorderManager().scheduleBorderShrink(WorldUtil.getWorld(TFFA.getInstance().getConfigManager().getSetting("world-name")));
-
     }, delay / 1000 * 20L);
   }
 
@@ -100,15 +102,28 @@ public class FFAEvent {
           player.sendMessage(winMessage);
         }
 
+        List<String> eliminationStrings = TFFA.getInstance().getConfig().getStringList("settings.elimination-commands");
+        for (String command : eliminationStrings) {
+          String cmd = command.replace("%player%", winner.getName());
+          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+        }
+
         Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-          List<String> effectStrings = TFFA.getInstance().getConfig().getStringList("settings.reward-commands");
-          for (String command : effectStrings) {
+          List<String> rewardStrings = TFFA.getInstance().getConfig().getStringList("settings.reward-commands");
+          for (String command : rewardStrings) {
             String cmd = command.replace("%player%", winner.getName());
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
           }
         }, 20L);
+
       }
       stop();
+    }
+
+    List<String> eliminationStrings = TFFA.getInstance().getConfig().getStringList("settings.elimination-commands");
+    for (String command : eliminationStrings) {
+      String cmd = command.replace("%player%", p.getName());
+      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
     }
   }
 

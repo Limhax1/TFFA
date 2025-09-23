@@ -1,5 +1,5 @@
 messages:
-  reload: "&#4DFF88[✔] &#4D9BFFConfigsikeresen újratöltve!"
+  reload: "&#4DFF88[✔] &#4D9BFFConfig sikeresen újratöltve!"
   join-already-started: "&#FF4C4C[✘] &#4D9BFFAz event már elindult!"
   join-not-running: "&#FF4C4C[✘] &#4D9BFFJelenleg nincs futó event!"
   join-already-in-event: "&#FF4C4C[✘] &#4D9BFFMár részt veszel az eventben!"
