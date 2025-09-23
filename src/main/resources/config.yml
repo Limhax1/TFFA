@@ -1,0 +1,58 @@
+messages:
+  reload: "&#4DFF88[✔] &#4D9BFFConfigsikeresen újratöltve!"
+  join-already-started: "&#FF4C4C[✘] &#4D9BFFAz event már elindult!"
+  join-not-running: "&#FF4C4C[✘] &#4D9BFFJelenleg nincs futó event!"
+  join-already-in-event: "&#FF4C4C[✘] &#4D9BFFMár részt veszel az eventben!"
+  join-inventory-not-empty: "&#FF4C4C[✘] &#4D9BFFCsatlakozás előtt ürítsd ki az inventorid!"
+  joined-event: "&#4DFF88[✔] &#4D9BFFSikeresen csatlakoztál az FFA eventhez!"
+
+  leave-not-running: "&#FF4C4C[✘] &#4D9BFFJelenleg nincs futó event!"
+  leave-not-in-event: "&#FF4C4C[✘] &#4D9BFFNem vagy az eventben!"
+  left-event: "&#FF4C4C[ℹ] &#4D9BFFKiléptél az FFA eventből."
+
+  start-already-running: "&#FF4C4C[✘] &#4D9BFFA játék már folyamatban van!"
+  event-starting: "&#4DFF88[✔] &#4D9BFFAz event elindul %seconds% másodpercen belül!"
+  event-started: "&#4DFF88[✔] &#4D9BFFAz event elindult!"
+  event-started-command: "&#4DFF88[✔] &#4D9BFFEvent elindítva!"
+  start-announce: "&#6DC5FF[⚔] &#4D9BFFElindult az FFA event! &#6DC5FFCsatlakozz: &#4DFF88/ffa join"
+
+  stop-not-running: "&#FF4C4C[✘] &#4D9BFFJelenleg nincs futó event!"
+  event-stopped: "&#4DFF88[✔] &#4D9BFFEvent leállítva!"
+  stop-announce: "&#6DC5FF[⚔] &#4D9BFFA(z) FFA event véget ért!"
+
+  player-joined-announce: "&#6DC5FF➜ &#4D9BFF%player% &#6DC5FFcsatlakozott az FFA eventhez!"
+  player-left-announce: "&#6DC5FF➜ &#4D9BFF%player% &#6DC5FFkilépett az FFA eventből!"
+  event-win-announce: "&#6DC5FF➜ &#4D9BFF%player% &#6DC5FFmegnyerte az FFA eventet!"
+
+  kit-set-success: "&#4DFF88[✔] &#4D9BFFKit sikeresen beállítva!"
+  kit-give-success: "&#4DFF88[✔] &#4D9BFFKit kiosztva a játékosnak!"
+  kit-player-not-online: "&#FF4C4C[✘] &#4D9BFFA játékos nem található!"
+  kit-no-permission: "&#FF4C4C[✘] &#4D9BFFNincs jogosultságod a Kitekhez!"
+  kit-no-kit-available: "&#FF4C4C[✘] &#4D9BFFNem érhető el Kit!"
+  kit-given: "&#4DFF88[✔] &#4D9BFFKit kiosztva!"
+  kit-reloaded: "&#4DFF88[✔] &#4D9BFFKitek újratöltve!"
+
+settings:
+  kit-size: 45
+  world-name: "world"
+  start-delay: 10 # in seconds
+  require-empty-inv-to-join: false
+  border-velocity-cooldown: 20 # in miliseconds
+
+  # Potion effects that get applied during the event
+  # Format: "EFFECT_TYPE:duration_in_ticks:amplifier_level:delay_in_seconds"
+  # Duration: 20 ticks = 1 second
+  # Amplifier: 1 = level 1, 2 = level 2, etc.
+  # Delay: seconds after event starts before effect is applied
+  potion-effects:
+    - "STRENGTH:100000:3:0"        # Strength II for 30 seconds, applied 5 seconds after event starts
+    - "INVISIBILITY:100000:1:0"    # Invisibility I for 10 seconds, applied 3 seconds after event starts
+
+  shrink-border: true
+  border-shrink-delay: 3 # in seconds
+  border-shrink-size: 7 # in blocks
+  border-shrink-time: 10 # in seconds
+  border-original-size: 20 # in blocks
+
+  reward-commands:
+    - "give %player% apple 1"

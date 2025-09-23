@@ -1,0 +1,69 @@
+// This file is part of TFFA
+// Copyright (C) 2025 Limhax
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+package me.limhax.tFFA.listener;
+
+import me.limhax.tFFA.TFFA;
+import me.limhax.tFFA.event.FFAEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+public class BukkitListener implements Listener {
+
+  @EventHandler
+  public void onPlayerQuit(PlayerQuitEvent event) {
+
+    // Make sure we dont leak memory.
+    FFAEvent ffaEvent = TFFA.getInstance().getEvent();
+    if (ffaEvent.getPlayers().contains(event.getPlayer())) {
+      ffaEvent.removePlayer(event.getPlayer());
+    }
+  }
+
+  @EventHandler
+  public void onPlayerDeath(PlayerDeathEvent event) {
+    FFAEvent ffaEvent = TFFA.getInstance().getEvent();
+    if (ffaEvent.getPlayers().contains(event.getPlayer())) {
+      ffaEvent.removePlayer(event.getPlayer());
+    }
+  }
+
+  @EventHandler
+  public void onPlayerMove(PlayerMoveEvent event) {
+    Location to = event.getTo();
+    Location from = event.getFrom();
+    TFFA.getInstance().getBorderManager().tick(event.getPlayer(), to, from);
+  }
+
+  @EventHandler
+  public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    if (!(event.getDamager() instanceof Player damager)) return;
+    if (!(event.getEntity() instanceof Player victim)) return;
+
+    FFAEvent ffaEvent = TFFA.getInstance().getEvent();
+    if (!ffaEvent.getPlayers().contains(damager) || !ffaEvent.getPlayers().contains(victim)) return;
+    if (!ffaEvent.isStated()) event.setCancelled(true);
+  }
+}
