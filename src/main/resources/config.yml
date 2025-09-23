@@ -34,7 +34,7 @@ messages:
 
 settings:
   kit-size: 45
-  world-name: "world"
+  world-name: "ffa"
   start-delay: 10 # in seconds
   require-empty-inv-to-join: false
   border-velocity-cooldown: 20 # in miliseconds
