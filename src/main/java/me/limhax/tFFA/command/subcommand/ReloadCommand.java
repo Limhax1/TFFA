@@ -24,7 +24,7 @@ import me.limhax.tFFA.TFFA;
 import org.bukkit.command.CommandSender;
 
 @CommandAlias("ffa|tffa")
-@CommandPermission("tffa.join")
+@CommandPermission("tffa.reload")
 public class ReloadCommand extends BaseCommand {
 
   @Subcommand("reload|rl")

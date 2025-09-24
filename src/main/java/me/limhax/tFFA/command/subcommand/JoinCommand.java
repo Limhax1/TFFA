@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+
 package me.limhax.tFFA.command.subcommand;
 
 import co.aikar.commands.BaseCommand;
@@ -25,6 +26,7 @@ import me.limhax.tFFA.event.FFAEvent;
 import me.limhax.tFFA.manager.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.List;
 
@@ -36,7 +38,8 @@ public class JoinCommand extends BaseCommand {
   public void execute(Player sender) {
     ConfigManager config = TFFA.getInstance().getConfigManager();
     FFAEvent event = TFFA.getInstance().getEvent();
-    if (sender.getPlayer() == null) return;
+    if (sender == null) return;
+
     if (event.isStarted()) {
       sender.sendMessage(config.getMessage("join-already-started"));
       return;
@@ -47,27 +50,30 @@ public class JoinCommand extends BaseCommand {
       return;
     }
 
-    if (event.getPlayers().contains(sender)) {
+    if (event.getPlayers().containsKey(sender.getName())) {
       sender.sendMessage(config.getMessage("join-already-in-event"));
       return;
     }
 
-    if (!sender.getInventory().isEmpty() && TFFA.getInstance().getConfigManager().getBoolean("require-empty-inv-to-join")) {
+    if (!sender.getInventory().isEmpty() && config.getBoolean("require-empty-inv-to-join")) {
       sender.sendMessage(config.getMessage("join-inventory-not-empty"));
       return;
     }
 
     List<String> joinCommands = TFFA.getInstance().getConfig().getStringList("settings.join-commands");
     for (String command : joinCommands) {
-      String cmd = command.replace("%player%", sender.getPlayer().getName());
+      String cmd = command.replace("%player%", sender.getName());
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
     }
 
     Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-      if (sender.getPlayer() != null) {
-        event.addPlayer(sender.getPlayer());
+      if (sender.isOnline()) {
+        event.addPlayer(sender);
+        for (PotionEffect effect : sender.getActivePotionEffects()) {
+          sender.removePotionEffect(effect.getType());
+        }
       }
-    }, 20);
+    }, 20L);
 
     sender.sendMessage(config.getMessage("joined-event"));
   }

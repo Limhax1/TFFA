@@ -105,6 +105,7 @@ public class BorderManager {
   }
 
   public void scheduleBorderShrink(World world) {
+    if (world == null) return;
     WorldBorder border = world.getWorldBorder();
     int delay = TFFA.getInstance().getConfigManager().getInt("border-shrink-delay");
     int duration = TFFA.getInstance().getConfigManager().getInt("border-shrink-time");

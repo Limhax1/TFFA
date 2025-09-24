@@ -24,6 +24,7 @@ import me.limhax.tFFA.util.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
@@ -115,10 +116,8 @@ public class FFAEvent {
     p.setHealth(20);
     p.setFoodLevel(20);
     p.setSaturation(20);
-    p.clearActivePotionEffects();
-
-    if (p.getInventory() != null) {
-      p.getInventory().clear();
+    for (PotionEffect effect : p.getActivePotionEffects()) {
+      p.removePotionEffect(effect.getType());
     }
   }
 
