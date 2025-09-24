@@ -19,6 +19,7 @@ package me.limhax.tFFA.manager;
 import me.limhax.tFFA.TFFA;
 import me.limhax.tFFA.event.FFAEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -27,36 +28,14 @@ import java.util.List;
 
 public class EffectManager {
 
-  public static class DelayedPotionEffect {
-    private final PotionEffectType type;
-    private final int duration;
-    private final int amplifier;
-    private final int delay;
-
-    public DelayedPotionEffect(PotionEffectType type, int duration, int amplifier, int delay) {
-      this.type = type;
-      this.duration = duration;
-      this.amplifier = amplifier;
-      this.delay = delay;
-    }
-
-    public PotionEffectType getType() { return type; }
-    public int getDuration() { return duration; }
-    public int getAmplifier() { return amplifier; }
-    public int getDelay() { return delay; }
-
-    public PotionEffect toPotionEffect() {
-      return new PotionEffect(type, duration, amplifier - 1);
-    }
+  public EffectManager() {
   }
-
-  public EffectManager() {}
 
   public void scheduleEffects() {
     List<DelayedPotionEffect> effects = getPotionEffects();
 
     for (DelayedPotionEffect effect : effects) {
-      scheduleEffect(effect.getType(), effect.getDuration(), effect.getAmplifier(), effect.getDelay());
+      scheduleEffect(effect.type(), effect.duration(), effect.amplifier(), effect.delay());
     }
   }
 
@@ -105,11 +84,14 @@ public class EffectManager {
     FFAEvent event = TFFA.getInstance().getEvent();
 
     Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-      if (event.isRunning() && event.isStated() && !event.isStopping()) {
-        for (var player : event.getPlayers()) {
+      if (event.isRunning() && event.isStarted() && !event.isStopping()) {
+        for (Player player : event.getPlayers().values()) {
           player.addPotionEffect(new PotionEffect(type, duration, amplifier - 1));
         }
       }
     }, delay * 20L);
+  }
+
+  public record DelayedPotionEffect(PotionEffectType type, int duration, int amplifier, int delay) {
   }
 }

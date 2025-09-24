@@ -94,7 +94,7 @@ public class KitManager {
       }
     }
 
-    TFFA.getInstance().getLogger().info(ColorUtil.translate("&aKit loaded: " + kitName));
+    TFFA.getInstance().getLogger().info(ColorUtil.translate("Kit loaded: " + kitName));
   }
 
   public void saveKit(Player player, String kitName) {
@@ -117,7 +117,7 @@ public class KitManager {
     try {
       kitConfig.save(kitFile);
       loadKit();
-      TFFA.getInstance().getLogger().info(ColorUtil.translate("&aKit saved: " + kitName));
+      TFFA.getInstance().getLogger().info(ColorUtil.translate("Kit saved: " + kitName));
     } catch (IOException e) {
       TFFA.getInstance().getLogger().severe("Could not save kit");
       e.printStackTrace();

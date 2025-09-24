@@ -18,15 +18,12 @@ package me.limhax.tFFA.listener;
 
 import me.limhax.tFFA.TFFA;
 import me.limhax.tFFA.event.FFAEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -64,6 +61,6 @@ public class BukkitListener implements Listener {
 
     FFAEvent ffaEvent = TFFA.getInstance().getEvent();
     if (!ffaEvent.getPlayers().contains(damager) || !ffaEvent.getPlayers().contains(victim)) return;
-    if (!ffaEvent.isStated()) event.setCancelled(true);
+    if (!ffaEvent.isStarted()) event.setCancelled(true);
   }
 }

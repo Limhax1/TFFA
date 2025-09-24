@@ -37,7 +37,7 @@ public class JoinCommand extends BaseCommand {
     ConfigManager config = TFFA.getInstance().getConfigManager();
     FFAEvent event = TFFA.getInstance().getEvent();
     if (sender.getPlayer() == null) return;
-    if (event.isStated()) {
+    if (event.isStarted()) {
       sender.sendMessage(config.getMessage("join-already-started"));
       return;
     }

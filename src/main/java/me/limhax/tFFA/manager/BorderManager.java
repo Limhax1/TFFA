@@ -35,13 +35,12 @@ import java.util.UUID;
 @Setter
 public class BorderManager {
 
-  private long lastVelocity;
   private static final double EXPAND = 0.15;
-  private long velocityCooldown = 250;
   private static final double KNOCKBACK_STRENGTH = 0.2;
   private static final double MIN_Y_VELOCITY = 0.12;
-
   private final Map<UUID, BukkitRunnable> borderShrinkTasks = new HashMap<>();
+  private long lastVelocity;
+  private long velocityCooldown = 250;
   private boolean borderShrinkingEnabled;
   private int startAfterSeconds;
   private int shrinkDuration;
@@ -66,7 +65,7 @@ public class BorderManager {
     }
     this.lastVelocity = now;
 
-    Vector knockback = calculateKnockback(to, border);
+    Vector knockback = getKnockbackVector(to, border);
     player.setVelocity(knockback);
   }
 
@@ -80,8 +79,7 @@ public class BorderManager {
     return dx <= safeZoneHalfSize && dz <= safeZoneHalfSize;
   }
 
-
-  private Vector calculateKnockback(Location playerLocation, WorldBorder border) {
+  private Vector getKnockbackVector(Location playerLocation, WorldBorder border) {
     Location center = border.getCenter();
     double safeZoneHalfSize = (border.getSize() / 2.0) - EXPAND;
 

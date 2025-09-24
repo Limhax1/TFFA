@@ -17,146 +17,138 @@
 package me.limhax.tFFA.event;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import me.limhax.tFFA.TFFA;
 import me.limhax.tFFA.manager.ConfigManager;
 import me.limhax.tFFA.util.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Getter
-@Setter
 public class FFAEvent {
 
-  private boolean running;
-  private boolean stated;
-  private boolean stopping;
-  private ArrayList<Player> players;
-
-  public FFAEvent() {
-    running = false;
-    players = new ArrayList<>();
-  }
+  private final ConcurrentHashMap<String, Player> players = new ConcurrentHashMap<>();
+  private volatile boolean running, started, stopping;
+  private BukkitTask startTask;
 
   public void start() {
+    if (running) return;
+
     running = true;
-    this.stopping = false;
-    World world = WorldUtil.getWorld(TFFA.getInstance().getConfigManager().getSetting("world-name"));
-    final int original = TFFA.getInstance().getConfigManager().getInt("border-original-size");
-    world.getWorldBorder().setSize(original);
-    ConfigManager config = TFFA.getInstance().getConfigManager();
-    long delay = config.getInt("start-delay") * 1000L;
+    stopping = false;
 
-    String message = config.getMessage("event-starting")
-        .replace("%seconds%", String.valueOf(delay / 1000L));
-    for (Player player : Bukkit.getOnlinePlayers()) {
-      player.sendMessage(message);
-    }
+    resetWorldBorder();
 
-    Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-      stated = true;
-      String message1 = config.getMessage("event-started");
-      for (Player player : Bukkit.getOnlinePlayers()) {
-        player.sendMessage(message1);
-      }
+    ConfigManager config = config();
+    long delay = config.getInt("start-delay");
+
+    broadcast(config.getMessage("event-starting").replace("%seconds%", String.valueOf(delay)));
+
+    startTask = Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
+      started = true;
+      broadcast(config.getMessage("event-started"));
 
       TFFA.getInstance().getEffectManager().scheduleEffects();
-      TFFA.getInstance().getBorderManager().scheduleBorderShrink(WorldUtil.getWorld(TFFA.getInstance().getConfigManager().getSetting("world-name")));
-    }, delay / 1000 * 20L);
+      TFFA.getInstance().getBorderManager().scheduleBorderShrink(getWorld());
+    }, delay * 20L);
   }
 
   public void addPlayer(Player p) {
-    if (players != null && !players.contains(p)) {
-      players.add(p);
-    }
+    if (p == null || stopping || players.containsKey(p.getName())) return;
 
+    players.put(p.getName(), p);
     TFFA.getInstance().getInventoryManager().applyInventory(p);
-
-    ConfigManager config = TFFA.getInstance().getConfigManager();
-    String message = config.getMessage("player-joined-announce")
-        .replace("%player%", p.getName());
-
-    for (Player player : Bukkit.getOnlinePlayers()) {
-      player.sendMessage(message);
-    }
+    broadcast(config().getMessage("player-joined-announce").replace("%player%", p.getName()));
   }
 
   public void removePlayer(Player p) {
-    if (players != null) {
-      players.remove(p);
-    }
+    if (p == null || players.remove(p.getName()) == null) return;
 
     cleanupPlayer(p);
+    executeCommands("settings.elimination-commands", p);
 
-    if (players.size() == 1) {
-      if (!stopping) {
-        Player winner = players.get(0);
-        ConfigManager config = TFFA.getInstance().getConfigManager();
-        String winMessage = config.getMessage("event-win-announce")
-            .replace("%player%", winner.getName());
-        for (Player player : Bukkit.getOnlinePlayers()) {
-          player.sendMessage(winMessage);
-        }
-
-        List<String> eliminationStrings = TFFA.getInstance().getConfig().getStringList("settings.elimination-commands");
-        for (String command : eliminationStrings) {
-          String cmd = command.replace("%player%", winner.getName());
-          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-        }
-
-        Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-          List<String> rewardStrings = TFFA.getInstance().getConfig().getStringList("settings.reward-commands");
-          for (String command : rewardStrings) {
-            String cmd = command.replace("%player%", winner.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-          }
-        }, 20L);
-
-      }
-      stop();
-    }
-
-    List<String> eliminationStrings = TFFA.getInstance().getConfig().getStringList("settings.elimination-commands");
-    for (String command : eliminationStrings) {
-      String cmd = command.replace("%player%", p.getName());
-      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+    if (players.size() == 1 && !stopping) {
+      handleWinner();
     }
   }
 
   public void stop() {
+    if (!running && !stopping) return;
+
     stopping = true;
 
-
-    for (Player player : new ArrayList<>(players)) {
-      cleanupPlayer(player);
+    if (startTask != null && !startTask.isCancelled()) {
+      startTask.cancel();
     }
 
-    World world = WorldUtil.getWorld(TFFA.getInstance().getConfigManager().getSetting("world-name"));
-    final int original = TFFA.getInstance().getConfigManager().getInt("border-original-size");
-    world.getWorldBorder().setSize(original);
+    players.values().forEach(this::cleanupPlayer);
+    resetWorldBorder();
 
     players.clear();
-    running = false;
-    stated = false;
+    running = started = stopping = false;
+  }
+
+  private void handleWinner() {
+    stopping = true;
+    Player winner = players.values().iterator().next();
+
+    broadcast(config().getMessage("event-win-announce").replace("%player%", winner.getName()));
+    executeCommands("settings.elimination-commands", winner);
+
+    Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
+      executeCommands("settings.reward-commands", winner);
+      Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), this::stop, 20L);
+    }, 20L);
   }
 
   private void cleanupPlayer(Player p) {
-    ConfigManager config = TFFA.getInstance().getConfigManager();
-    String message = config.getMessage("player-left-announce")
-        .replace("%player%", p.getName());
+    if (p == null || !p.isOnline()) return;
 
-    for (Player player : Bukkit.getOnlinePlayers()) {
-      player.sendMessage(message);
-    }
+    broadcast(config().getMessage("player-left-announce").replace("%player%", p.getName()));
 
     p.setHealth(20);
+    p.setFoodLevel(20);
+    p.setSaturation(20);
     p.clearActivePotionEffects();
+
     if (p.getInventory() != null) {
       p.getInventory().clear();
     }
+  }
+
+  private void executeCommands(String path, Player p) {
+    List<String> commands = TFFA.getInstance().getConfig().getStringList(path);
+    commands.forEach(cmd -> {
+      if (cmd != null && !cmd.trim().isEmpty()) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", p.getName()));
+      }
+    });
+  }
+
+  private void resetWorldBorder() {
+    World world = getWorld();
+    if (world != null) {
+      world.getWorldBorder().setSize(config().getInt("border-original-size"));
+    }
+  }
+
+  private void broadcast(String message) {
+    if (message != null && !message.trim().isEmpty()) {
+      Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(message));
+    }
+  }
+
+  private ConfigManager config() {
+    return TFFA.getInstance().getConfigManager();
+  }
+
+  private World getWorld() {
+    return WorldUtil.getWorld(config().getSetting("world-name"));
   }
 }

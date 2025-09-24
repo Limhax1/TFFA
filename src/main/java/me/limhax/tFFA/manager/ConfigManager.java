@@ -29,7 +29,7 @@ import java.nio.file.Files;
 @Getter
 public class ConfigManager {
 
-  private File configFile;
+  private final File configFile;
   private YamlConfiguration config;
 
   public ConfigManager() {
