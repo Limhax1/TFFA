@@ -51,12 +51,37 @@ public class FFAEvent {
 
     broadcast(config.getMessage("event-starting").replace("%seconds%", String.valueOf(delay)));
 
+    BukkitTask countdownTask = Bukkit.getScheduler().runTaskTimer(TFFA.getInstance(), new Runnable() {
+      long timeLeft = delay;
+
+      @Override
+      public void run() {
+        if (timeLeft <= 0 || !running || stopping) {
+          this.cancel();
+          return;
+        }
+
+        timeLeft--;
+
+        if (timeLeft <= 10 || timeLeft % 30 == 0) {
+          broadcast(config.getMessage("event-starting")
+              .replace("%seconds%", String.valueOf(timeLeft)));
+        }
+      }
+
+      private void cancel() {
+        Bukkit.getScheduler().cancelTask(this.hashCode());
+      }
+    }, 20L, 20L);
+
     startTask = Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
       started = true;
       broadcast(config.getMessage("event-started"));
 
       TFFA.getInstance().getEffectManager().scheduleEffects();
       TFFA.getInstance().getBorderManager().scheduleBorderShrink(getWorld());
+
+      countdownTask.cancel();
     }, delay * 20L);
   }
 
@@ -64,8 +89,14 @@ public class FFAEvent {
     if (p == null || stopping || players.containsKey(p.getName())) return;
 
     players.put(p.getName(), p);
-    TFFA.getInstance().getInventoryManager().applyInventory(p);
-    broadcast(config().getMessage("player-joined-announce").replace("%player%", p.getName()));
+
+    Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
+      for (PotionEffect effect : p.getActivePotionEffects()) {
+        p.removePotionEffect(effect.getType());
+      }
+      TFFA.getInstance().getInventoryManager().applyInventory(p);
+      broadcast(config().getMessage("player-joined-announce").replace("%player%", p.getName()));
+    }, 20);
   }
 
   public void removePlayer(Player p) {
@@ -76,6 +107,8 @@ public class FFAEvent {
 
     if (players.size() == 1 && !stopping) {
       handleWinner();
+    } else if (players.isEmpty() && !stopping) {
+      Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), this::stop, 20L);
     }
   }
 
@@ -116,6 +149,13 @@ public class FFAEvent {
     p.setHealth(20);
     p.setFoodLevel(20);
     p.setSaturation(20);
+
+    p.getInventory().clear();
+    p.getInventory().setArmorContents(null);
+    p.updateInventory();
+
+
+
     for (PotionEffect effect : p.getActivePotionEffects()) {
       p.removePotionEffect(effect.getType());
     }

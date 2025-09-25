@@ -66,14 +66,7 @@ public class JoinCommand extends BaseCommand {
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
     }
 
-    Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-      if (sender.isOnline()) {
-        event.addPlayer(sender);
-        for (PotionEffect effect : sender.getActivePotionEffects()) {
-          sender.removePotionEffect(effect.getType());
-        }
-      }
-    }, 20L);
+    event.addPlayer(sender);
 
     sender.sendMessage(config.getMessage("joined-event"));
   }
