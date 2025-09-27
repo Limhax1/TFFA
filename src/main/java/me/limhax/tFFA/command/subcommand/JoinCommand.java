@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-
 package me.limhax.tFFA.command.subcommand;
 
 import co.aikar.commands.BaseCommand;
@@ -26,7 +25,6 @@ import me.limhax.tFFA.event.FFAEvent;
 import me.limhax.tFFA.manager.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 
 import java.util.List;
 
@@ -61,10 +59,9 @@ public class JoinCommand extends BaseCommand {
     }
 
     List<String> joinCommands = TFFA.getInstance().getConfig().getStringList("settings.join-commands");
-    for (String command : joinCommands) {
-      String cmd = command.replace("%player%", sender.getName());
-      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-    }
+    joinCommands.forEach(command -> {
+      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+    });
 
     event.addPlayer(sender);
 

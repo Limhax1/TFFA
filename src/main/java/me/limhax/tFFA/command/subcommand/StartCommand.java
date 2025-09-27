@@ -46,8 +46,6 @@ public class StartCommand extends BaseCommand {
     sender.sendMessage(config.getMessage("event-started-command"));
 
     // This isn't exactly optimal, Bukkit.broadcastMessage() is better, but it doesn't work on drowned.
-    for (Player player : Bukkit.getOnlinePlayers()) {
-      player.sendMessage(config.getMessage("start-announce"));
-    }
+    Bukkit.getOnlinePlayers().forEach(p -> {p.sendMessage(config.getMessage("start-announce"));});
   }
 }

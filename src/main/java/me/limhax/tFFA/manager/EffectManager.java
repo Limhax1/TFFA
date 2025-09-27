@@ -29,6 +29,7 @@ import java.util.List;
 public class EffectManager {
 
   public EffectManager() {
+
   }
 
   public void scheduleEffects() {

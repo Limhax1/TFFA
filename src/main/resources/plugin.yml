@@ -3,24 +3,4 @@ version: '1.0-PRE1'
 main: me.limhax.tFFA.TFFA
 api-version: '1.21'
 authors: [ Limhax ]
-description: A free for all plugin for Drowned.
-
-permissions:
-  ffa.gui:
-    description: Access to the TFFA control GUI
-    default: op
-  ffa.start:
-    description: Permission to start events
-    default: op
-  ffa.stop:
-    description: Permission to stop events
-    default: op
-  ffa.force:
-    description: Permission to force stop events
-    default: op
-  ffa.config:
-    description: Permission to modify plugin settings
-    default: op
-  ffa.reload:
-    description: Permission to reload configurations
-    default: op
+description: An easy to use free for all plugin.

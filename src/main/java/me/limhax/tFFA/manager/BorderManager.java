@@ -35,7 +35,7 @@ import java.util.UUID;
 @Setter
 public class BorderManager {
 
-  private static final double EXPAND = 0.15;
+  private static final double EXPAND = 0.3;
   private static final double KNOCKBACK_STRENGTH = 0.2;
   private static final double MIN_Y_VELOCITY = 0.12;
   private final Map<UUID, BukkitRunnable> borderShrinkTasks = new HashMap<>();

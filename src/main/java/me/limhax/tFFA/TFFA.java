@@ -49,37 +49,23 @@ public final class TFFA extends JavaPlugin {
   public void onEnable() {
     instance = this;
 
+    this.getLogger().info(ColorUtil.translate("Registering listeners & commands..."));
     this.getServer().getPluginManager().registerEvents(new BukkitListener(), this);
-    this.getLogger().info(ColorUtil.translate("Bukkit listener registered."));
     this.configManager = new ConfigManager();
-    this.getLogger().info(ColorUtil.translate("Config manager instance created."));
     this.kitManager = new KitManager();
-    this.getLogger().info(ColorUtil.translate("Kit manager instance created."));
     this.event = new FFAEvent();
-    this.getLogger().info(ColorUtil.translate("Event instance created."));
     this.inventoryManager = new InventoryManager();
-    this.getLogger().info(ColorUtil.translate("Inventory manager instance created."));
     this.commandManager = new PaperCommandManager(this);
-    this.getLogger().info(ColorUtil.translate("Command manager instance created."));
     this.borderManager = new BorderManager();
-    this.getLogger().info(ColorUtil.translate("Border manager instance created."));
     this.effectManager = new EffectManager();
-    this.getLogger().info(ColorUtil.translate("Effect manager instance created."));
 
     this.commandManager.registerCommand(new MainCommand());
-    this.getLogger().info(ColorUtil.translate("Main command registered."));
     this.commandManager.registerCommand(new StartCommand());
-    this.getLogger().info(ColorUtil.translate("Start command registered."));
     this.commandManager.registerCommand(new StopCommand());
-    this.getLogger().info(ColorUtil.translate("Stop command registered."));
     this.commandManager.registerCommand(new JoinCommand());
-    this.getLogger().info(ColorUtil.translate("Join command registered."));
     this.commandManager.registerCommand(new LeaveCommand());
-    this.getLogger().info(ColorUtil.translate("Leave command registered."));
     this.commandManager.registerCommand(new KitCommand());
-    this.getLogger().info(ColorUtil.translate("Kit command registered."));
     this.commandManager.registerCommand(new ReloadCommand());
-    this.getLogger().info(ColorUtil.translate("Reload command registered."));
 
     this.getLogger().info(ColorUtil.translate("TFFA has been enabled."));
   }

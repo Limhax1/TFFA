@@ -24,10 +24,8 @@ import me.limhax.tFFA.util.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -43,13 +41,10 @@ public class FFAEvent {
 
     running = true;
     stopping = false;
-
     resetWorldBorder();
 
-    ConfigManager config = config();
-    long delay = config.getInt("start-delay");
-
-    broadcast(config.getMessage("event-starting").replace("%seconds%", String.valueOf(delay)));
+    long delay = config().getInt("start-delay");
+    broadcast(config().getMessage("event-starting").replace("%seconds%", String.valueOf(delay)));
 
     BukkitTask countdownTask = Bukkit.getScheduler().runTaskTimer(TFFA.getInstance(), new Runnable() {
       long timeLeft = delay;
@@ -57,30 +52,21 @@ public class FFAEvent {
       @Override
       public void run() {
         if (timeLeft <= 0 || !running || stopping) {
-          this.cancel();
+          Bukkit.getScheduler().cancelTask(this.hashCode());
           return;
         }
 
-        timeLeft--;
-
-        if (timeLeft <= 10 || timeLeft % 30 == 0) {
-          broadcast(config.getMessage("event-starting")
-              .replace("%seconds%", String.valueOf(timeLeft)));
+        if (--timeLeft <= 10 || timeLeft % 30 == 0) {
+          broadcast(config().getMessage("event-starting").replace("%seconds%", String.valueOf(timeLeft)));
         }
-      }
-
-      private void cancel() {
-        Bukkit.getScheduler().cancelTask(this.hashCode());
       }
     }, 20L, 20L);
 
     startTask = Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
       started = true;
-      broadcast(config.getMessage("event-started"));
-
+      broadcast(config().getMessage("event-started"));
       TFFA.getInstance().getEffectManager().scheduleEffects();
       TFFA.getInstance().getBorderManager().scheduleBorderShrink(getWorld());
-
       countdownTask.cancel();
     }, delay * 20L);
   }
@@ -89,11 +75,8 @@ public class FFAEvent {
     if (p == null || stopping || players.containsKey(p.getName())) return;
 
     players.put(p.getName(), p);
-
     Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-      for (PotionEffect effect : p.getActivePotionEffects()) {
-        p.removePotionEffect(effect.getType());
-      }
+      p.getActivePotionEffects().forEach(e -> p.removePotionEffect(e.getType()));
       TFFA.getInstance().getInventoryManager().applyInventory(p);
       broadcast(config().getMessage("player-joined-announce").replace("%player%", p.getName()));
     }, 20);
@@ -117,13 +100,10 @@ public class FFAEvent {
 
     stopping = true;
 
-    if (startTask != null && !startTask.isCancelled()) {
-      startTask.cancel();
-    }
+    if (startTask != null && !startTask.isCancelled()) startTask.cancel();
 
     players.values().forEach(this::cleanupPlayer);
     resetWorldBorder();
-
     players.clear();
     running = started = stopping = false;
   }
@@ -149,32 +129,21 @@ public class FFAEvent {
     p.setHealth(20);
     p.setFoodLevel(20);
     p.setSaturation(20);
-
     p.getInventory().clear();
     p.getInventory().setArmorContents(null);
     p.updateInventory();
-
-
-
-    for (PotionEffect effect : p.getActivePotionEffects()) {
-      p.removePotionEffect(effect.getType());
-    }
+    p.getActivePotionEffects().forEach(e -> p.removePotionEffect(e.getType()));
   }
 
   private void executeCommands(String path, Player p) {
-    List<String> commands = TFFA.getInstance().getConfig().getStringList(path);
-    commands.forEach(cmd -> {
-      if (cmd != null && !cmd.trim().isEmpty()) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", p.getName()));
-      }
-    });
+    config().getConfig().getStringList(path).stream()
+        .filter(cmd -> cmd != null && !cmd.trim().isEmpty())
+        .forEach(cmd -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", p.getName())));
   }
 
   private void resetWorldBorder() {
     World world = getWorld();
-    if (world != null) {
-      world.getWorldBorder().setSize(config().getInt("border-original-size"));
-    }
+    if (world != null) world.getWorldBorder().setSize(config().getInt("border-original-size"));
   }
 
   private void broadcast(String message) {
