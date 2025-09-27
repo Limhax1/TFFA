@@ -14,23 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.command.subcommand;
+package me.limhax.tffa.command.subcommand;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
-import me.limhax.tFFA.TFFA;
+import me.limhax.tffa.TFFA;
+import me.limhax.tffa.event.FFAEvent;
+import me.limhax.tffa.manager.ConfigManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 @CommandAlias("ffa|tffa")
-@CommandPermission("tffa.reload")
-public class ReloadCommand extends BaseCommand {
+@CommandPermission("tffa.start")
+public class StartCommand extends BaseCommand {
 
-  @Subcommand("reload|rl")
+  @Subcommand("start")
   public void execute(CommandSender sender) {
-    TFFA.getInstance().reloadConfig();
-    TFFA.getInstance().getConfigManager().loadConfig();
-    sender.sendMessage(TFFA.getInstance().getConfigManager().getMessage("reload"));
+    ConfigManager config = TFFA.getInstance().getConfigManager();
+    FFAEvent event = TFFA.getInstance().getEvent();
+
+    if (event.isRunning()) {
+      sender.sendMessage(config.getMessage("start-already-running"));
+      return;
+    }
+
+    event.start();
+
+    sender.sendMessage(config.getMessage("event-started-command"));
+
+    // This isn't exactly optimal, Bukkit.broadcastMessage() is better, but it doesn't work on drowned.
+    Bukkit.getOnlinePlayers().forEach(p -> {p.sendMessage(config.getMessage("start-announce"));});
   }
 }

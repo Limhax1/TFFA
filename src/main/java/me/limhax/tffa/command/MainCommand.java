@@ -14,31 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.manager;
+package me.limhax.tffa.command;
 
-import lombok.Getter;
-import me.limhax.tFFA.TFFA;
-import org.bukkit.entity.Player;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
+import me.limhax.tffa.util.ColorUtil;
+import org.bukkit.command.CommandSender;
 
-public class InventoryManager {
-  @Getter
-  private final TFFA plugin;
+@CommandAlias("ffa|tffa")
+public class MainCommand extends BaseCommand {
 
-  public InventoryManager() {
-    this.plugin = TFFA.getInstance();
-  }
-
-  public void applyInventory(Player player) {
-    if (plugin.getKitManager() != null) {
-      plugin.getKitManager().giveKit(player);
-    } else {
-      player.getInventory().clear();
-    }
-  }
-
-  public void saveKit(Player player, String kitName) {
-    if (plugin.getKitManager() != null) {
-      plugin.getKitManager().saveKit(player, kitName);
-    }
+  @Default
+  public void onDefault(CommandSender sender) {
+    String message = ColorUtil.translate("&#4D9BFFThis server is running TFFA made by Limhax.");
+    sender.sendMessage(message);
   }
 }

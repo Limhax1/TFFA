@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.event;
+package me.limhax.tffa.event;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import me.limhax.tFFA.TFFA;
-import me.limhax.tFFA.manager.ConfigManager;
-import me.limhax.tFFA.util.WorldUtil;
+import me.limhax.tffa.TFFA;
+import me.limhax.tffa.manager.ConfigManager;
+import me.limhax.tffa.util.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

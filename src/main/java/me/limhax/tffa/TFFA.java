@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA;
+package me.limhax.tffa;
 
 import co.aikar.commands.PaperCommandManager;
 import lombok.Getter;
-import me.limhax.tFFA.command.MainCommand;
-import me.limhax.tFFA.command.subcommand.*;
-import me.limhax.tFFA.event.FFAEvent;
-import me.limhax.tFFA.listener.BukkitListener;
-import me.limhax.tFFA.manager.*;
-import me.limhax.tFFA.util.ColorUtil;
+import me.limhax.tffa.command.MainCommand;
+import me.limhax.tffa.command.subcommand.*;
+import me.limhax.tffa.event.FFAEvent;
+import me.limhax.tffa.listener.BukkitListener;
+import me.limhax.tffa.manager.*;
+import me.limhax.tffa.util.ColorUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter

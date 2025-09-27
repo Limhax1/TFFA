@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.command.subcommand;
+package me.limhax.tffa.command.subcommand;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
-import me.limhax.tFFA.TFFA;
-import me.limhax.tFFA.event.FFAEvent;
-import me.limhax.tFFA.manager.ConfigManager;
+import me.limhax.tffa.TFFA;
+import me.limhax.tffa.event.FFAEvent;
+import me.limhax.tffa.manager.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

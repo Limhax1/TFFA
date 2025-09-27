@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.util;
+package me.limhax.tffa.util;
 
 import net.md_5.bungee.api.ChatColor;
 

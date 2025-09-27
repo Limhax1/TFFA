@@ -14,17 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.util;
+package me.limhax.tffa.command.subcommand;
 
-import org.bukkit.World;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Subcommand;
+import me.limhax.tffa.TFFA;
+import org.bukkit.command.CommandSender;
 
-public class WorldUtil {
-  public static World getWorld(String worldName) {
-    for (World world : org.bukkit.Bukkit.getWorlds()) {
-      if (world.getName().equalsIgnoreCase(worldName)) {
-        return world;
-      }
-    }
-    return null;
+@CommandAlias("ffa|tffa")
+@CommandPermission("tffa.reload")
+public class ReloadCommand extends BaseCommand {
+
+  @Subcommand("reload|rl")
+  public void execute(CommandSender sender) {
+    TFFA.getInstance().reloadConfig();
+    TFFA.getInstance().getConfigManager().loadConfig();
+    sender.sendMessage(TFFA.getInstance().getConfigManager().getMessage("reload"));
   }
 }

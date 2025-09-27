@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.manager;
+package me.limhax.tffa.manager;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.limhax.tFFA.TFFA;
+import me.limhax.tffa.TFFA;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

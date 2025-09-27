@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.listener;
+package me.limhax.tffa.listener;
 
-import me.limhax.tFFA.TFFA;
-import me.limhax.tFFA.event.FFAEvent;
+import me.limhax.tffa.TFFA;
+import me.limhax.tffa.event.FFAEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

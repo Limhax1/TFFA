@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-package me.limhax.tFFA.manager;
+package me.limhax.tffa.manager;
 
 import lombok.Getter;
-import me.limhax.tFFA.TFFA;
-import me.limhax.tFFA.util.ColorUtil;
+import me.limhax.tffa.TFFA;
+import me.limhax.tffa.util.ColorUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
