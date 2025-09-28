@@ -60,7 +60,7 @@ public class JoinCommand extends BaseCommand {
 
     List<String> joinCommands = TFFA.getInstance().getConfig().getStringList("settings.join-commands");
     joinCommands.forEach(command -> {
-      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+      Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", sender.getName()));
     });
 
     event.addPlayer(sender);
