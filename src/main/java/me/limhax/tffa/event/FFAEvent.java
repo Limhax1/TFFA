@@ -85,7 +85,7 @@ public class FFAEvent {
   public void removePlayer(Player p) {
     if (p == null || players.remove(p.getName()) == null) return;
 
-    cleanupPlayer(p);
+    cleanupPlayer(p, true);
     executeCommands("settings.elimination-commands", p);
 
     if (players.size() == 1 && !stopping) {
@@ -102,7 +102,7 @@ public class FFAEvent {
 
     if (startTask != null && !startTask.isCancelled()) startTask.cancel();
 
-    players.values().forEach(this::cleanupPlayer);
+    players.values().forEach(p -> cleanupPlayer(p, true));
     resetWorldBorder();
     players.clear();
     running = started = stopping = false;
@@ -112,7 +112,12 @@ public class FFAEvent {
     stopping = true;
     Player winner = players.values().iterator().next();
 
+    players.remove(winner.getName());
+
+    cleanupPlayer(winner, false);
+
     broadcast(config().getMessage("event-win-announce").replace("%player%", winner.getName()));
+
     executeCommands("settings.elimination-commands", winner);
 
     Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
@@ -121,10 +126,12 @@ public class FFAEvent {
     }, 20L);
   }
 
-  private void cleanupPlayer(Player p) {
+  private void cleanupPlayer(Player p, boolean announceLeave) {
     if (p == null || !p.isOnline()) return;
 
-    broadcast(config().getMessage("player-left-announce").replace("%player%", p.getName()));
+    if (announceLeave) {
+      broadcast(config().getMessage("player-left-announce").replace("%player%", p.getName()));
+    }
 
     p.setHealth(20);
     p.setFoodLevel(20);
