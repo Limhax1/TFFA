@@ -62,7 +62,8 @@ public class ConfigManager {
 
   public String getMessage(String path) {
     String message = config.getString("messages." + path, "Missing message: " + path);
-    return ColorUtil.translate(message);
+    String prefix = config.getString("messages.prefix");
+    return ColorUtil.translate(prefix + message);
   }
 
   public boolean getBoolean(String path) {

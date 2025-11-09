@@ -63,11 +63,15 @@ public class FFAEvent {
     }, 20L, 20L);
 
     startTask = Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-      started = true;
-      broadcast(config().getMessage("event-started"));
-      TFFA.getInstance().getEffectManager().scheduleEffects();
-      TFFA.getInstance().getBorderManager().scheduleBorderShrink(getWorld());
-      countdownTask.cancel();
+      if (players.size() > 0) {
+        started = true;
+        broadcast(config().getMessage("event-started"));
+        TFFA.getInstance().getBorderManager().scheduleBorderShrink(getWorld());
+        countdownTask.cancel();
+      } else {
+        countdownTask.cancel();
+        stop();
+      }
     }, delay * 20L);
   }
 
@@ -79,6 +83,7 @@ public class FFAEvent {
       p.getActivePotionEffects().forEach(e -> p.removePotionEffect(e.getType()));
       TFFA.getInstance().getInventoryManager().applyInventory(p);
       broadcast(config().getMessage("player-joined-announce").replace("%player%", p.getName()));
+      TFFA.getInstance().getEffectManager().scheduleEffects();
     }, 20);
   }
 
@@ -96,7 +101,9 @@ public class FFAEvent {
   }
 
   public void stop() {
-    if (!running && !stopping) return;
+    if (!running && !stopping) {
+      return;
+    }
 
     stopping = true;
 

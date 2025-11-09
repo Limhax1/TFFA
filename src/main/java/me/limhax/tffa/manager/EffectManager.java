@@ -16,9 +16,12 @@
 
 package me.limhax.tffa.manager;
 
+import co.aikar.commands.BukkitCommandIssuer;
 import me.limhax.tffa.TFFA;
 import me.limhax.tffa.event.FFAEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -63,7 +66,9 @@ public class EffectManager {
         return null;
       }
 
-      PotionEffectType type = PotionEffectType.getByName(parts[0].toUpperCase());
+      NamespacedKey key = NamespacedKey.minecraft(parts[0].toLowerCase());
+      PotionEffectType type = Registry.POTION_EFFECT_TYPE.get(key);
+
       if (type == null) {
         TFFA.getInstance().getLogger().warning("Unknown potion effect type: " + parts[0]);
         return null;
@@ -85,7 +90,7 @@ public class EffectManager {
     FFAEvent event = TFFA.getInstance().getEvent();
 
     Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-      if (event.isRunning() && event.isStarted() && !event.isStopping()) {
+      if (event.isRunning() && !event.isStopping()) {
         for (Player player : event.getPlayers().values()) {
           player.addPotionEffect(new PotionEffect(type, duration, amplifier - 1));
         }

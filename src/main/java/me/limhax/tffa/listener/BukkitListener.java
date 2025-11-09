@@ -24,6 +24,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -62,5 +64,13 @@ public class BukkitListener implements Listener {
     FFAEvent ffaEvent = TFFA.getInstance().getEvent();
     if (!ffaEvent.getPlayers().contains(damager) || !ffaEvent.getPlayers().contains(victim)) return;
     if (!ffaEvent.isStarted()) event.setCancelled(true);
+  }
+
+  @EventHandler
+  public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+    if (TFFA.getInstance().getEvent().getPlayers().contains(event.getPlayer()) && (!event.getMessage().equals("/ffa leave") && !event.getMessage().equals("/tffa leave"))) {
+      event.setCancelled(true);
+      event.getPlayer().sendMessage(TFFA.getInstance().getConfigManager().getMessage("command-rejected"));
+    }
   }
 }
