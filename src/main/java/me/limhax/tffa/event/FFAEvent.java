@@ -63,7 +63,7 @@ public class FFAEvent {
     }, 20L, 20L);
 
     startTask = Bukkit.getScheduler().runTaskLater(TFFA.getInstance(), () -> {
-      if (players.size() > 0) {
+      if (players.size() > 1) {
         started = true;
         broadcast(config().getMessage("event-started"));
         TFFA.getInstance().getBorderManager().scheduleBorderShrink(getWorld());
@@ -110,6 +110,8 @@ public class FFAEvent {
     if (startTask != null && !startTask.isCancelled()) startTask.cancel();
 
     players.values().forEach(p -> cleanupPlayer(p, true));
+
+
     resetWorldBorder();
     players.clear();
     running = started = stopping = false;
@@ -139,6 +141,8 @@ public class FFAEvent {
     if (announceLeave) {
       broadcast(config().getMessage("player-left-announce").replace("%player%", p.getName()));
     }
+
+    executeCommands("settings.elimination-commands", p);
 
     p.setHealth(20);
     p.setFoodLevel(20);

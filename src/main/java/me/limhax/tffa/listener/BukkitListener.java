@@ -19,15 +19,13 @@ package me.limhax.tffa.listener;
 import me.limhax.tffa.TFFA;
 import me.limhax.tffa.event.FFAEvent;
 import org.bukkit.Location;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerCommandSendEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 public class BukkitListener implements Listener {
 
@@ -71,6 +69,17 @@ public class BukkitListener implements Listener {
     if (TFFA.getInstance().getEvent().getPlayers().contains(event.getPlayer()) && (!event.getMessage().equals("/ffa leave") && !event.getMessage().equals("/tffa leave"))) {
       event.setCancelled(true);
       event.getPlayer().sendMessage(TFFA.getInstance().getConfigManager().getMessage("command-rejected"));
+    }
+  }
+
+  @EventHandler
+  public void onEnderPearlTeleport(PlayerTeleportEvent event) {
+    if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+      if (TFFA.getInstance().getEvent().getPlayers().contains(event.getPlayer())) {
+        if (!TFFA.getInstance().getBorderManager().isInsideSafeZone(event.getTo(), event.getPlayer().getWorld().getWorldBorder())) {
+          event.setCancelled(true);
+        }
+      }
     }
   }
 }
