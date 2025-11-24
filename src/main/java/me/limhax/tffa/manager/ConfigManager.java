@@ -77,4 +77,8 @@ public class ConfigManager {
   public int getInt(String path) {
     return config.getInt("settings." + path, 0);
   }
+
+  public double getDouble(String path, double def) {
+    return config.getDouble("settings." + path, def);
+  }
 }

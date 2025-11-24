@@ -36,8 +36,6 @@ import java.util.UUID;
 public class BorderManager {
 
   private static final double EXPAND = 0.3;
-  private static final double KNOCKBACK_STRENGTH = 0.2;
-  private static final double MIN_Y_VELOCITY = 0.05;
   private final Map<UUID, BukkitRunnable> borderShrinkTasks = new HashMap<>();
   private long lastVelocity;
   private long velocityCooldown = 250;
@@ -55,7 +53,7 @@ public class BorderManager {
 
     WorldBorder border = player.getWorld().getWorldBorder();
 
-    if (isInsideSafeZone(to, border)) {
+    if (isInsideBorder(to, border)) {
       return;
     }
 
@@ -69,7 +67,7 @@ public class BorderManager {
     player.setVelocity(knockback);
   }
 
-  public boolean isInsideSafeZone(Location location, WorldBorder border) {
+  public boolean isInsideBorder(Location location, WorldBorder border) {
     Location center = border.getCenter();
     double safeZoneHalfSize = (border.getSize() / 2.0) - EXPAND;
 
@@ -96,12 +94,14 @@ public class BorderManager {
       inward = new Vector(0, 0, Math.signum(-offset.getZ()));
     }
 
-    inward.normalize();
-    if (inward.getY() < MIN_Y_VELOCITY) {
-      inward.setY(MIN_Y_VELOCITY);
-    }
+    final double minYVel = TFFA.getInstance().getConfigManager().getDouble("border-velocity-y", 0.05);
+    final double strength = TFFA.getInstance().getConfigManager().getDouble("border-velocity-strength", 0.2);
 
-    return inward.multiply(KNOCKBACK_STRENGTH);
+    inward.normalize();
+    inward.setY(minYVel);
+
+
+    return inward.multiply(strength);
   }
 
   public void scheduleBorderShrink(World world) {

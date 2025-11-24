@@ -1,34 +1,33 @@
 messages:
   prefix: "&8[&#CD0000FFA&8] &8» "
-  reload: "&#CD0000Config sikeresen újratöltve!"
-  join-already-started: "&#CD0000Az event már elkezdődött!"
-  join-not-running: "&#FF0000Nincs aktív játék! Várj a következőre."
-  join-already-in-event: "&#FF0000Már csatlakoztál a játékhoz!"
-  join-inventory-not-empty: "&#CD0000Ürítsd ki az inventárt a csatlakozáshoz!"
-  joined-event: "&fCsatlakoztál az &eFFA &farénához!"
-  leave-not-running: "&#FF0000Nincs aktív játék!"
-  leave-not-in-event: "&#FF0000Nem vagy a játékban!"
-  left-event: "&#CD0000Kiléptél az FFA eventből."
-  start-already-running: "&#CD0000A játék már folyamatban van!"
-  event-starting: "&e%seconds% &#FFFFFFmásodperc van hátra a csatlakozásig! &#AAAAAA(/ffa join)"
-  event-started: "&#00FF00PvP Engedélyezve! A játék elindult!"
-  event-started-command: "&#CD0000event elindítva!"
-  start-announce: "&fElindult az &eFFA &faréna! &7(/ffa join)"
-  stop-not-running: "&#FF0000Nincs aktív játék!"
-  event-stopped: "&fAz &eFFA &faréna megszakítva."
-  stop-announce: "&#FF0000A játék véget ért!"
-  player-joined-announce: "&e%player% &#FFFFFFcsatlakozott"
-  player-left-announce: "&e%player% &#FFFFFFelhagyta a játékot"
-  event-win-announce: "&#00FF00Gratulálunk, &e%player% &#00FF00megnyerte a játékot!"
-  kit-set-success: "&#CD0000Kit sikeresen beállítva!"
-  kit-give-success: "&#CD0000Kit kiosztva a játékosnak!"
-  kit-player-not-online: "&#CD0000Játékos nem található!"
-  kit-no-permission: "&#CD0000Nincs jogosultságod kit-ekhez!"
-  kit-no-kit-available: "&#CD0000Nincs elérhető kit!"
-  kit-given: "&#CD0000Kit kiosztva!"
-  kit-reloaded: "&#CD0000Kitek újratöltve!"
-  command-rejected: "&#FF0000FFA közben a parancsok le vannak tiltva! Használd: &#FFFF00/ffa leave"
-
+  reload: "&#CD0000Config reloaded successfully!"
+  join-already-started: "&#CD0000The event has already started!"
+  join-not-running: "&#FF0000There is no active game! Wait for the next one."
+  join-already-in-event: "&#FF0000You already joined the game!"
+  join-inventory-not-empty: "&#CD0000Empty your inventory before joining!"
+  joined-event: "&fYou joined the &eFFA &farena!"
+  leave-not-running: "&#FF0000There is no active game!"
+  leave-not-in-event: "&#FF0000You are not in the game!"
+  left-event: "&#CD0000You left the FFA event."
+  start-already-running: "&#CD0000The game is already running!"
+  event-starting: "&e%seconds% &#FFFFFFseconds left to join! &#AAAAAA(/ffa join)"
+  event-started: "&#00FF00PvP Enabled! The game has started!"
+  event-started-command: "&#CD0000Event started!"
+  start-announce: "&fThe &eFFA &farena has started! &7(/ffa join)"
+  stop-not-running: "&#FF0000There is no active game!"
+  event-stopped: "&fThe &eFFA &farena has been stopped."
+  stop-announce: "&#FF0000The game has ended!"
+  player-joined-announce: "&e%player% &#FFFFFFjoined"
+  player-left-announce: "&e%player% &#FFFFFFleft the game"
+  event-win-announce: "&#00FF00Congratulations, &e%player% &#00FF00won the game!"
+  kit-set-success: "&#CD0000Kit set successfully!"
+  kit-give-success: "&#CD0000Kit given to the player!"
+  kit-player-not-online: "&#CD0000Player not found!"
+  kit-no-permission: "&#CD0000You don’t have permission for kits!"
+  kit-no-kit-available: "&#CD0000No kit available!"
+  kit-given: "&#CD0000Kit given!"
+  kit-reloaded: "&#CD0000Kits reloaded!"
+  command-rejected: "&#FF0000Commands are disabled during FFA! Use: &#FFFF00/ffa leave"
 
 settings:
   # dont really change this.
@@ -42,6 +41,10 @@ settings:
   # the delay between giving the player velocity when near the edge of the border.
   # higher = slower, smaller = faster
   border-velocity-cooldown: 20 # in milliseconds
+  # minimum vertical knockback that should be applied to the player when knocking back from the border.
+  border-velocity-y: 0.05
+  # strength of the knockback given
+  border-velocity-strength: 0.2
 
   # Potion effects that get applied during the event
   # Format: "EFFECT_TYPE:duration_in_ticks:amplifier_level:delay_in_seconds"

@@ -19,7 +19,6 @@ package me.limhax.tffa.listener;
 import me.limhax.tffa.TFFA;
 import me.limhax.tffa.event.FFAEvent;
 import org.bukkit.Location;
-import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,7 +75,7 @@ public class BukkitListener implements Listener {
   public void onEnderPearlTeleport(PlayerTeleportEvent event) {
     if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
       if (TFFA.getInstance().getEvent().getPlayers().contains(event.getPlayer())) {
-        if (!TFFA.getInstance().getBorderManager().isInsideSafeZone(event.getTo(), event.getPlayer().getWorld().getWorldBorder())) {
+        if (!TFFA.getInstance().getBorderManager().isInsideBorder(event.getTo(), event.getPlayer().getWorld().getWorldBorder())) {
           event.setCancelled(true);
         }
       }
