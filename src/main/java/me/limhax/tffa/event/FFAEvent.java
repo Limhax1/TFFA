@@ -90,6 +90,7 @@ public class FFAEvent {
   public void removePlayer(Player p) {
     if (p == null || players.remove(p.getName()) == null) return;
 
+    TFFA.getInstance().getBorderManager().removePlayer(p.getUniqueId());
     cleanupPlayer(p, true);
     executeCommands("settings.elimination-commands", p);
 
@@ -111,7 +112,7 @@ public class FFAEvent {
 
     players.values().forEach(p -> cleanupPlayer(p, true));
 
-
+    TFFA.getInstance().getBorderManager().clearAllPlayers();
     resetWorldBorder();
     players.clear();
     running = started = stopping = false;

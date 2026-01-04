@@ -16,7 +16,6 @@
 
 package me.limhax.tffa.manager;
 
-import co.aikar.commands.BukkitCommandIssuer;
 import me.limhax.tffa.TFFA;
 import me.limhax.tffa.event.FFAEvent;
 import org.bukkit.Bukkit;

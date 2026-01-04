@@ -45,7 +45,9 @@ public class StopCommand extends BaseCommand {
     sender.sendMessage(config.getMessage("event-stopped"));
 
     // This isn't exactly optimal, Bukkit.broadcastMessage() is better, but it doesn't work on drowned.
-    Bukkit.getOnlinePlayers().forEach(p -> {p.sendMessage(config.getMessage("stop-announce"));});
+    Bukkit.getOnlinePlayers().forEach(p -> {
+      p.sendMessage(config.getMessage("stop-announce"));
+    });
 
   }
 }

@@ -49,7 +49,7 @@ public final class TFFA extends JavaPlugin {
   public void onEnable() {
     instance = this;
 
-    this.getLogger().info(ColorUtil.translate("Registering listeners & commands..."));
+    this.getLogger().info("Registering listeners & commands...");
     this.getServer().getPluginManager().registerEvents(new BukkitListener(), this);
     this.configManager = new ConfigManager();
     this.kitManager = new KitManager();

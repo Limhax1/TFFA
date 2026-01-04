@@ -37,14 +37,22 @@ settings:
   # time before the event starts - players won't be able to join after this countdown.
   start-delay: 10 # in seconds
   # allow people to join with an empty inventory.
-  require-empty-inv-to-join: false
+  require-empty-inv-to-join: true
   # the delay between giving the player velocity when near the edge of the border.
   # higher = slower, smaller = faster
   border-velocity-cooldown: 20 # in milliseconds
+  # distance outside the border before knockback triggers
+  border-knockback-threshold: 0.15
   # minimum vertical knockback that should be applied to the player when knocking back from the border.
   border-velocity-y: 0.05
   # strength of the knockback given
-  border-velocity-strength: 0.2
+  border-velocity-strength: 0.15
+  # base multiplier applied to border knockback
+  border-velocity-multiplier: 1.0
+  # distance outside the border to apply the far multiplier
+  border-velocity-far-distance: 2.0
+  # multiplier when player is far outside (beyond border-velocity-far-distance)
+  border-velocity-far-multiplier: 2.0
 
   # Potion effects that get applied during the event
   # Format: "EFFECT_TYPE:duration_in_ticks:amplifier_level:delay_in_seconds"
@@ -53,13 +61,14 @@ settings:
   # Delay: seconds after event starts before effect is applied
   potion-effects:
     - "STRENGTH:100000:3:0"        # Strength III for a long time, applied immediately when event starts
-    - "INVISIBILITY:100000:1:0"    # Invisibility I for a long time, applied immediately when event starts
 
   shrink-border: true
   border-shrink-delay: 3 # in seconds
   border-shrink-size: 7 # in blocks
   border-shrink-time: 10 # in seconds
   border-original-size: 20 # in blocks
+  # disable applying border knockback once the border has finished shrinking
+  disable-velocity-when-border-reached-final-pos: true
 
   # these will run for the winner.
   reward-commands:

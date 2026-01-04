@@ -19,6 +19,7 @@ package me.limhax.tffa.command;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
+import me.limhax.tffa.TFFA;
 import me.limhax.tffa.util.ColorUtil;
 import org.bukkit.command.CommandSender;
 
@@ -27,7 +28,7 @@ public class MainCommand extends BaseCommand {
 
   @Default
   public void onDefault(CommandSender sender) {
-    String message = ColorUtil.translate("&#4D9BFFThis server is running TFFA made by Limhax.");
+    String message = ColorUtil.translate("&#4D9BFFThis server is running TFFA V" + TFFA.getInstance().getDescription().getVersion() + " made by Limhax.");
     sender.sendMessage(message);
   }
 }
